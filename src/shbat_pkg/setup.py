@@ -11,9 +11,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/urdf', [
-            'urdf/lidar.urdf.xacro',
             'urdf/sahabat_robot.urdf.xacro',
-            'urdf/sahabat_control.urdf.xacro',
         ]),
 
         # ('share/' + package_name + '/map', [
@@ -41,6 +39,8 @@ setup(
         'console_scripts': [
             'rpm2odom = shbat_pkg.rpm2odom:main',
             'kalman_filter = shbat_pkg.kalman_filter:main',
+            'joy2cmd.py = shbat_pkg.joy2cmd:main',
+            
         ],
     },
 )

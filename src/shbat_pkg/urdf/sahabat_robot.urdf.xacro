@@ -1,5 +1,5 @@
 <?xml version = "1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="sahabat_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <!--BASE LINK-->
 
@@ -40,6 +40,7 @@
     </visual>
 
     <collision>
+        <origin xyz = "0.15 0 0.11" />
        <geometry>
             <box size = "0.3 0.35 0.22"/>
         </geometry>
@@ -193,7 +194,7 @@
     </visual>
     <collision>
         <geometry>
-            <cylinder radius="0.05" length="0.1"/>
+            <cylinder radius="0.05" length="0.06"/>
         </geometry>
     </collision>
     <inertial>

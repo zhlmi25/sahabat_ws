@@ -5,7 +5,51 @@ from launch_ros.actions import Node
 import xacro
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+import subprocess
 
+def detect_lidar_port():
+    try:
+        # Run lsusb to get USB devices
+        lsusb_output = subprocess.check_output(['lsusb']).decode()
+        # Check for the FT232 device
+        if '0403:6001' in lsusb_output:
+            # List ttyUSB devices
+            for i in range(10):
+                port = f'/dev/ttyUSB{i}'
+                try:
+                    # Use udevadm to check device info
+                    udevadm_output = subprocess.check_output(['udevadm', 'info', '-q', 'all', '-n', port]).decode()
+                    if 'ID_VENDOR_ID=0403' in udevadm_output and 'ID_MODEL_ID=6001' in udevadm_output:
+                        print(f"Detected LIDAR port: {port}")
+                        return port
+                except Exception:
+                    continue
+    except Exception:
+        pass
+    print("LIDAR port not detected, using default: /dev/ttyUSB0")
+    return '/dev/ttyUSB0'  # Default fallback
+
+lidar_port = detect_lidar_port()
+
+def detect_imu_port():
+    try:
+        lsusb_output = subprocess.check_output(['lsusb']).decode()
+        if '10c4:ea60' in lsusb_output:
+            for i in range(10):
+                port = f'/dev/ttyUSB{i}'
+                try:
+                    udevadm_output = subprocess.check_output(['udevadm', 'info', '-q', 'all', '-n', port]).decode()
+                    if 'ID_VENDOR_ID=10c4' in udevadm_output and 'ID_MODEL_ID=ea60' in udevadm_output:
+                        print(f"Detected IMU port: {port}")
+                        return port
+                except Exception:
+                    continue
+    except Exception:
+        pass
+    print("IMU port not detected, using default: /dev/ttyUSB0")
+    return '/dev/ttyUSB0'
+
+imu_port = detect_imu_port()
 
 def generate_launch_description():
 
@@ -43,22 +87,22 @@ def generate_launch_description():
     )
 
     node_oradar_scan = Node(
-        package='oradar_radar',
-        executable='oradar_scan_node',
+        package='oradar_lidar',
+        executable='oradar_scan',
         name='oradar_scan_node',
         output='screen',
         parameters=[
-        {'device_model': 'MS200'},
-        {'frame_id': 'base_link'},
-        {'scan_topic': 'scan'},
-        {'port_name': '/dev/ttyUSB0'},
-        {'baudrate': 230400},
-        {'angle_min': 0.0},
-        {'angle_max': 360.0},
-        {'range_min': 0.05},
-        {'range_max': 20.0},
-        {'clockwise': False},
-        {'motor_speed': 10}
+            {'device_model': 'MS200'},
+            {'frame_id': 'base_link'},
+            {'scan_topic': 'scan'},
+            {'port_name': lidar_port},
+            {'baudrate': 230400},
+            {'angle_min': 0.0},
+            {'angle_max': 360.0},
+            {'range_min': 0.05},
+            {'range_max': 20.0},
+            {'clockwise': False},
+            {'motor_speed': 10}
         ]  # Change as needed
     )
 
@@ -67,12 +111,32 @@ def generate_launch_description():
         executable='imu_node',
         name='imu_node',
         output='screen',
-        parameters=[{'serial_port': '/dev/ttyUSB0'}]  # Change '/dev/ttyUSB0' to your actual serial port if needed
+        parameters=[{'serial_port': imu_port}]  # Change '/dev/ttyUSB0' to your actual serial port if needed
+    )
+
+    node_joy2cmd = Node(
+        package='shbat_pkg',
+        executable='joy2cmd.py',
+        name='joy2cmd',
+        output='screen'
+    )
+
+    node_joy_node = Node(
+        package='joy',
+        executable='joy_node',
+        name='joy_node',
+        output='screen'
     )
 
     # Run the nodes
     return LaunchDescription([
         node_robot_state_publisher,
         node_joint_state_publisher,
-        # node_rviz 
+        node_rviz,
+
+        node_joy_node,
+        node_joy2cmd,
+
+        # node_oradar_scan,
+        node_imu
     ])
