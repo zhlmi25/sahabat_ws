@@ -14,7 +14,7 @@ payload = {
     "data": data_bytes
 }
 
-for _ in range(1):
+for _ in range(100):
     response = requests.post("http://localhost:8000", json=payload)
     # response = requests.get("http://localhost:8000")
     print(response.json())

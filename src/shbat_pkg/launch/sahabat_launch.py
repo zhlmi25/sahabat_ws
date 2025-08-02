@@ -86,7 +86,7 @@ def generate_launch_description():
         parameters=[{'robot_description': robot_description_raw}]
     )
 
-    node_oradar_scan = Node(
+    node_lidar_scan = Node(
         package='oradar_lidar',
         executable='oradar_scan',
         name='oradar_scan_node',
@@ -99,7 +99,7 @@ def generate_launch_description():
             {'baudrate': 230400},
             {'angle_min': 0.0},
             {'angle_max': 360.0},
-            {'range_min': 0.05},
+            {'range_min': 0.0},
             {'range_max': 20.0},
             {'clockwise': False},
             {'motor_speed': 10}
@@ -128,6 +128,13 @@ def generate_launch_description():
         output='screen'
     )
 
+    node_base_controller = Node(
+        package='shbat_pkg',
+        executable='base_controller',
+        name='base_controller',
+        output='screen'
+    )
+
     # Run the nodes
     return LaunchDescription([
         node_robot_state_publisher,
@@ -138,5 +145,7 @@ def generate_launch_description():
         node_joy2cmd,
 
         # node_oradar_scan,
-        node_imu
+        node_imu,
+        node_lidar_scan,
+        node_base_controller
     ])
