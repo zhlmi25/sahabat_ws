@@ -22,6 +22,7 @@ setup(
         ('share/' + package_name + '/launch', [
             'launch/sahabat_launch.py',
             'launch/sahabat_mapping.launch.py',
+            'launch/sahabat_nav.launch.py',
         ]),
         ('share/' + package_name + '/config', [
             'config/mapper_params_online_async.yaml',
