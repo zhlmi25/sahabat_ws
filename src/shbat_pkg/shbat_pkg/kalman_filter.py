@@ -13,8 +13,8 @@ class RpmImuOdomFusion(Node):
         super().__init__('rpm_imu_odom_fusion')
 
         # Robot parameters
-        self.wheel_radius = 0.05  # meters
-        self.wheel_base = 0.3     # meters
+        self.wheel_radius = 0.1651  # meters
+        self.wheel_base = 0.25     # meters
         self.rpm_to_rps = 2 * math.pi / 60
 
         # State variables
@@ -24,7 +24,7 @@ class RpmImuOdomFusion(Node):
         self.last_time = self.get_clock().now()
 
         # Subscribers
-        self.rpm_sub = self.create_subscription(Int32MultiArray, '/wheel_rpm', self.rpm_callback, 10)
+        self.rpm_sub = self.create_subscription(Int32MultiArray, '/wheel_odom', self.rpm_callback, 10)
         self.imu_sub = self.create_subscription(Imu, '/imu/data', self.imu_callback, 10)
 
         # Publisher

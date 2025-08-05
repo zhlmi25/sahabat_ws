@@ -116,7 +116,7 @@ def generate_launch_description():
 
     node_joy2cmd = Node(
         package='shbat_pkg',
-        executable='joy2cmd.py',
+        executable='joy2cmd',
         name='joy2cmd',
         output='screen'
     )
@@ -135,16 +135,22 @@ def generate_launch_description():
         output='screen'
     )
 
+    node_kalman_filter = Node(
+        package='shbat_pkg',
+        executable='rpm_imu_odom_fusion',
+        name='kalman_filter',
+        output='screen'
+    )
+
     # Run the nodes
     return LaunchDescription([
         node_robot_state_publisher,
         node_joint_state_publisher,
-        node_rviz,
+        # node_rviz,
 
         node_joy_node,
         node_joy2cmd,
 
-        # node_oradar_scan,
         node_imu,
         node_lidar_scan,
         node_base_controller

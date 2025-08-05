@@ -21,7 +21,7 @@ setup(
         
         ('share/' + package_name + '/launch', [
             'launch/sahabat_launch.py',
-            'launch/sahabat_slam.launch.py',
+            'launch/sahabat_mapping.launch.py',
         ]),
         ('share/' + package_name + '/config', [
             'config/mapper_params_online_async.yaml',
@@ -39,7 +39,7 @@ setup(
         'console_scripts': [
             'rpm2odom = shbat_pkg.rpm2odom:main',
             'kalman_filter = shbat_pkg.kalman_filter:main',
-            'joy2cmd.py = shbat_pkg.joy2cmd:main',
+            'joy2cmd = shbat_pkg.joy2cmd:main',
             'base_controller = shbat_pkg.base_controller:main',
         ],
     },

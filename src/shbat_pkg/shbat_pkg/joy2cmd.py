@@ -8,7 +8,7 @@ from geometry_msgs.msg import Twist
 
 class Joy2CmdNode(Node):
     def __init__(self):
-        super().__init__('joy2cmd_node')
+        super().__init__('joy2cmd')
         # Subscribe to the /joy topic
         self.subscription = self.create_subscription(
             Joy,
